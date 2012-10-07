@@ -23,8 +23,6 @@ import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.query.QueryUtil;
 
 public class P2DiffPrinter {
-	public static final boolean IGNORE_VERSIONS = true; // ignores differences when only the version has changed
-	public static final boolean IGNORE_CASE = true; // attempts to find IUs that have the same ID regardless of case
 	
 	private P2Diff diff;
 
@@ -64,14 +62,14 @@ public class P2DiffPrinter {
 		int aCounter = 0;
 		int bCounter = 0;
 		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
-			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), IGNORE_CASE);
+			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), Application.IGNORE_CASE);
 			if ( query.isEmpty() ) {
 				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
 				aCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
 				for (IInstallableUnit iu2 : set) {
-					IUDiffer iuDiffer = new IUDiffer(iu, iu2, IGNORE_VERSIONS);
+					IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
 					if ( iuDiffer.hasDifferences()) {
 						System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
 						aCounter++;
@@ -86,14 +84,14 @@ public class P2DiffPrinter {
 			}
 		}
 		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
-			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), IGNORE_CASE);
+			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), Application.IGNORE_CASE);
 			if ( query.isEmpty() ) {
 				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
 				bCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
 				for (IInstallableUnit iu2 : set) {
-					IUDiffer iuDiffer = new IUDiffer(iu, iu2, IGNORE_VERSIONS);
+					IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
 					if ( iuDiffer.hasDifferences()) {
 						System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
 						bCounter++;
