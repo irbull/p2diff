@@ -45,7 +45,7 @@ public class Application implements IApplication {
 		URI uriB = new URI(locationB);
 		IProvisioningAgent agent = setupAgent(null);
 		P2Diff diff = P2Diff.createP2Diff(agent, uriA, uriB);
-		new P2DiffPrinter(diff).printDiffs(System.out);
+		new P2DiffPrinter(diff, Application.IGNORE_CASE, Application.DEEP_COMPARE, Application.IGNORE_VERSIONS).printDiffs(System.out);
 		return IApplication.EXIT_OK;
 	}
 	

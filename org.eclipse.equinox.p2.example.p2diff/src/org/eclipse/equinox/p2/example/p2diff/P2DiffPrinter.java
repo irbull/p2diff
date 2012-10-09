@@ -22,12 +22,94 @@ import org.eclipse.equinox.p2.query.CollectionResult;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.query.QueryUtil;
 
+/**
+ * Pretty prints the differences between two repositories
+ * 
+ * @author Ian Bull
+ *
+ */
 public class P2DiffPrinter {
 	
 	private P2Diff diff;
+	private boolean deepCompare;
+	private boolean ignoreCase;
+	private boolean ignoreVersions;
 
-	public P2DiffPrinter(P2Diff diff) {
+	public P2DiffPrinter(P2Diff diff, boolean ignoreCase, boolean deepCompare, boolean ignoreVersions) {
 		this.diff = diff;
+		this.ignoreCase = ignoreCase;
+		this.deepCompare = deepCompare;
+		this.ignoreVersions = ignoreVersions;
+	}
+	
+	/**
+	 * Writes the differences to the output stream provided.
+	 * 
+	 * @param out The output stream to write the diff results too
+	 */
+	public void printDiffs(OutputStream out) {
+		IQueryResult<IInstallableUnit> relativeComplementB = diff.getRelativeComplementB();
+		IQueryResult<IInstallableUnit> relativeComplementA = diff.getRelativeComplementA();
+		IQueryResult<IInstallableUnit> repositoryA = diff.getRepositoryA();
+		IQueryResult<IInstallableUnit> repositoryB = diff.getRepositoryB();
+		
+		int aCounter = 0;
+		int bCounter = 0;
+		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
+			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), this.ignoreCase);
+			if ( query.isEmpty() || !this.ignoreVersions ) {
+				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
+				aCounter++;
+			} else {
+				Set<IInstallableUnit> set = query.toSet();
+				if (this.deepCompare) {
+					for (IInstallableUnit iu2 : set) {
+						IUDiffer iuDiffer = new IUDiffer(iu, iu2, this.ignoreVersions);
+						if (iuDiffer.hasDifferences()) {
+							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
+							aCounter++;
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
+							System.out.println("  > " + iuPart.toString());
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
+							System.out.println("  < " + iuPart.toString());
+						}
+					}
+				}
+			}
+		}
+		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
+			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), this.ignoreCase);
+			if ( query.isEmpty() || !this.ignoreVersions ) {
+				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
+				bCounter++;
+			} else {
+				Set<IInstallableUnit> set = query.toSet();
+				if (this.deepCompare) {
+					for (IInstallableUnit iu2 : set) {
+						IUDiffer iuDiffer = new IUDiffer(iu, iu2, this.ignoreVersions);
+						if (iuDiffer.hasDifferences()) {
+							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
+							bCounter++;
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
+							System.out.println("  < " + iuPart.toString());
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
+							System.out.println("  > " + iuPart.toString());
+						}
+					}
+				}
+			}
+		}
+		System.out.println("=== Summary ===");
+		if ( !relativeComplementB.isEmpty() ) {
+			System.out.println(diff.getRepositoryALocation() + " contains " + aCounter + " unique IUs");
+		}
+		if ( !relativeComplementA.isEmpty() ) {
+			System.out.println(diff.getRepositoryBLocation() + " contains " + bCounter + " unique IUs");
+		}
 	}
 	
 	/**
@@ -51,71 +133,4 @@ public class P2DiffPrinter {
 		}
 		return new CollectionResult<>(result);
 	}
-	
-	
-	public void printDiffs(OutputStream out) {
-		IQueryResult<IInstallableUnit> relativeComplementB = diff.getRelativeComplementB();
-		IQueryResult<IInstallableUnit> relativeComplementA = diff.getRelativeComplementA();
-		IQueryResult<IInstallableUnit> repositoryA = diff.getRepositoryA();
-		IQueryResult<IInstallableUnit> repositoryB = diff.getRepositoryB();
-		
-		int aCounter = 0;
-		int bCounter = 0;
-		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
-			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), Application.IGNORE_CASE);
-			if ( query.isEmpty() || !Application.IGNORE_VERSIONS ) {
-				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
-				aCounter++;
-			} else {
-				Set<IInstallableUnit> set = query.toSet();
-				if (Application.DEEP_COMPARE) {
-					for (IInstallableUnit iu2 : set) {
-						IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
-						if (iuDiffer.hasDifferences()) {
-							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
-							aCounter++;
-						}
-						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-							System.out.println("  > " + iuPart.toString());
-						}
-						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-							System.out.println("  < " + iuPart.toString());
-						}
-					}
-				}
-			}
-		}
-		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
-			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), Application.IGNORE_CASE);
-			if ( query.isEmpty() || !Application.IGNORE_VERSIONS ) {
-				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
-				bCounter++;
-			} else {
-				Set<IInstallableUnit> set = query.toSet();
-				if (Application.DEEP_COMPARE) {
-					for (IInstallableUnit iu2 : set) {
-						IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
-						if (iuDiffer.hasDifferences()) {
-							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
-							bCounter++;
-						}
-						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-							System.out.println("  < " + iuPart.toString());
-						}
-						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-							System.out.println("  > " + iuPart.toString());
-						}
-					}
-				}
-			}
-		}
-		System.out.println("=== Summary ===");
-		if ( !relativeComplementB.isEmpty() ) {
-			System.out.println(diff.getRepositoryALocation() + " contains " + aCounter + " unique IUs");
-		}
-		if ( !relativeComplementA.isEmpty() ) {
-			System.out.println(diff.getRepositoryBLocation() + " contains " + bCounter + " unique IUs");
-		}
-	}
-
 }
