@@ -30,9 +30,9 @@ public class IUDiffer {
 	private Collection<IUPart> retativeComplementA = null;
 	private Collection<IUPart> retativeComplementB = null;
 
-	public IUDiffer(IInstallableUnit iuA, IInstallableUnit iuB, boolean ignoreVersionDifferences) {
-		retativeComplementA = computeRelativeComplement(iuA, iuB, ignoreVersionDifferences);
-		retativeComplementB = computeRelativeComplement(iuB, iuA, ignoreVersionDifferences);
+	public IUDiffer(IInstallableUnit iuA, IInstallableUnit iuB) {
+		retativeComplementA = computeRelativeComplement(iuA, iuB);
+		retativeComplementB = computeRelativeComplement(iuB, iuA);
 	}
 	
 	public Collection<IUPart> getRetativeComplementA() {
@@ -43,13 +43,13 @@ public class IUDiffer {
 		return this.retativeComplementB;
 	}
 	
-	private static Collection<IUPart> computeRelativeComplement(IInstallableUnit iuA, IInstallableUnit iuB, boolean ignoreVersionDifferences) {
+	private static Collection<IUPart> computeRelativeComplement(IInstallableUnit iuA, IInstallableUnit iuB) {
 		Collection<IUPart> result = new ArrayList<IUPart>();
-		result.addAll(getPropertyDifferences(iuA.getProperties(), iuB.getProperties(), ignoreVersionDifferences));
-		result.addAll(getRequirementDifferences(iuA.getRequirements(), iuB.getRequirements(), ignoreVersionDifferences));
-		result.addAll(getProvidedCapabilityDifferences(iuA.getProvidedCapabilities(), iuB.getProvidedCapabilities(), ignoreVersionDifferences));
-		result.addAll(getTouchpointDataDifferences(iuA.getTouchpointData(), iuB.getTouchpointData(), ignoreVersionDifferences));
-		result.addAll(getArtifactDifferences(iuA.getArtifacts(), iuB.getArtifacts(), ignoreVersionDifferences));
+		result.addAll(getPropertyDifferences(iuA.getProperties(), iuB.getProperties()));
+		result.addAll(getRequirementDifferences(iuA.getRequirements(), iuB.getRequirements()));
+		result.addAll(getProvidedCapabilityDifferences(iuA.getProvidedCapabilities(), iuB.getProvidedCapabilities()));
+		result.addAll(getTouchpointDataDifferences(iuA.getTouchpointData(), iuB.getTouchpointData()));
+		result.addAll(getArtifactDifferences(iuA.getArtifacts(), iuB.getArtifacts()));
 		return result;
 	}
 
@@ -60,23 +60,21 @@ public class IUDiffer {
 	}
 	private static Collection<IUPart> getArtifactDifferences(
 			Collection<IArtifactKey> artifacts,
-			Collection<IArtifactKey> artifacts2,
-			boolean ignoreVersionDifferences) {
+			Collection<IArtifactKey> artifacts2) {
 		Set<IUPart> iu1 = new HashSet<IUPart>();
 		Set<IUPart> iu2 = new HashSet<IUPart>();
 		for (IArtifactKey iArtifactKey : artifacts) {
-			iu1.add(IUPart.createIUPart(iArtifactKey, ignoreVersionDifferences, iArtifactKey.getClassifier(), iArtifactKey.getId(), iArtifactKey.getVersion().toString()));
+			iu1.add(IUPart.createIUPart(iArtifactKey, true, iArtifactKey.getClassifier(), iArtifactKey.getId(), iArtifactKey.getVersion().toString()));
 		}
 		for (IArtifactKey iArtifactKey : artifacts2) {
-			iu2.add(IUPart.createIUPart(iArtifactKey, ignoreVersionDifferences, iArtifactKey.getClassifier(), iArtifactKey.getId(), iArtifactKey.getVersion().toString()));
+			iu2.add(IUPart.createIUPart(iArtifactKey, true, iArtifactKey.getClassifier(), iArtifactKey.getId(), iArtifactKey.getVersion().toString()));
 		}
 		return getComplement(iu1, iu2);
 	}
 
 	private static Collection<IUPart> getTouchpointDataDifferences(
 			Collection<ITouchpointData> touchpointData,
-			Collection<ITouchpointData> touchpointData2,
-			boolean ignoreVersionDifferences) {
+			Collection<ITouchpointData> touchpointData2 ) {
 		Set<IUPart> iu1 = new HashSet<IUPart>();
 		Set<IUPart> iu2 = new HashSet<IUPart>();
 		for (ITouchpointData element : touchpointData) {
@@ -99,30 +97,28 @@ public class IUDiffer {
 
 	private static Collection<IUPart> getProvidedCapabilityDifferences(
 			Collection<IProvidedCapability> providedCapabilities,
-			Collection<IProvidedCapability> providedCapabilities2,
-			boolean ignoreVersionDifferences) {
+			Collection<IProvidedCapability> providedCapabilities2) {
 		Set<IUPart> iu1 = new HashSet<IUPart>();
 		Set<IUPart> iu2 = new HashSet<IUPart>();
 		for (IProvidedCapability capability : providedCapabilities) {
-			iu1.add(IUPart.createIUPart(capability, ignoreVersionDifferences, capability.getName().toLowerCase(), capability.getNamespace(), capability.getVersion().toString()));
+			iu1.add(IUPart.createIUPart(capability, true, capability.getName().toLowerCase(), capability.getNamespace(), capability.getVersion().toString()));
 		}
 		for (IProvidedCapability capability : providedCapabilities2) {
-			iu2.add(IUPart.createIUPart(capability, ignoreVersionDifferences, capability.getName().toLowerCase(), capability.getNamespace(), capability.getVersion().toString()));
+			iu2.add(IUPart.createIUPart(capability, true, capability.getName().toLowerCase(), capability.getNamespace(), capability.getVersion().toString()));
 		}
 		return getComplement(iu1, iu2);
 	}
 
 	private static Collection<IUPart> getRequirementDifferences(
 			Collection<IRequirement> requirements,
-			Collection<IRequirement> requirements2,
-			boolean ignoreVersionDifferences) {
+			Collection<IRequirement> requirements2) {
 		Set<IUPart> iu1 = new HashSet<IUPart>();
 		Set<IUPart> iu2 = new HashSet<IUPart>();
 		for (IRequirement requirement : requirements) {
-			iu1.add(createIUPart(requirement, ignoreVersionDifferences));
+			iu1.add(createIUPart(requirement, true));
 		}
 		for (IRequirement requirement : requirements2) {
-			iu2.add(createIUPart(requirement, ignoreVersionDifferences));
+			iu2.add(createIUPart(requirement, true));
 		}
 		return getComplement(iu1, iu2);
 	}
@@ -137,7 +133,7 @@ public class IUDiffer {
 	}
 
 	private static Collection<IUPart> getPropertyDifferences(Map<String, String> properties,
-			Map<String, String> properties2, boolean ignoreVersionDifferences) {
+			Map<String, String> properties2) {
 		Set<IUPart> iu1 = new HashSet<IUPart>();
 		Set<IUPart> iu2 = new HashSet<IUPart>();
 		for (Entry<String, String> entry : properties.entrySet()) {

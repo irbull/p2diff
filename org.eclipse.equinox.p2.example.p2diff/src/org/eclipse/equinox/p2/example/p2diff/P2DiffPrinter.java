@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.equinox.p2.example.p2diff.Application.DifferenceType;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.CollectionResult;
 import org.eclipse.equinox.p2.query.IQueryResult;
@@ -31,15 +32,13 @@ import org.eclipse.equinox.p2.query.QueryUtil;
 public class P2DiffPrinter {
 	
 	private P2Diff diff;
-	private boolean deepCompare;
 	private boolean ignoreCase;
-	private boolean ignoreVersions;
+	private DifferenceType differenceType;
 
-	public P2DiffPrinter(P2Diff diff, boolean ignoreCase, boolean deepCompare, boolean ignoreVersions) {
+	public P2DiffPrinter(P2Diff diff, boolean ignoreCase, DifferenceType differenceType) {
 		this.diff = diff;
 		this.ignoreCase = ignoreCase;
-		this.deepCompare = deepCompare;
-		this.ignoreVersions = ignoreVersions;
+		this.differenceType = differenceType;
 	}
 	
 	/**
@@ -57,14 +56,14 @@ public class P2DiffPrinter {
 		int bCounter = 0;
 		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), this.ignoreCase);
-			if ( query.isEmpty() || !this.ignoreVersions ) {
+			if ( query.isEmpty() || this.differenceType == DifferenceType.ALL ) {
 				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
 				aCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
-				if (this.deepCompare) {
+				if (this.differenceType == DifferenceType.DEEP_COMPARE) {
 					for (IInstallableUnit iu2 : set) {
-						IUDiffer iuDiffer = new IUDiffer(iu, iu2, this.ignoreVersions);
+						IUDiffer iuDiffer = new IUDiffer(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
 							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
 							aCounter++;
@@ -81,14 +80,14 @@ public class P2DiffPrinter {
 		}
 		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), this.ignoreCase);
-			if ( query.isEmpty() || !this.ignoreVersions ) {
+			if ( query.isEmpty() || this.differenceType == DifferenceType.ALL  ) {
 				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
 				bCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
-				if (this.deepCompare) {
+				if (this.differenceType == DifferenceType.DEEP_COMPARE) {
 					for (IInstallableUnit iu2 : set) {
-						IUDiffer iuDiffer = new IUDiffer(iu, iu2, this.ignoreVersions);
+						IUDiffer iuDiffer = new IUDiffer(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
 							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
 							bCounter++;

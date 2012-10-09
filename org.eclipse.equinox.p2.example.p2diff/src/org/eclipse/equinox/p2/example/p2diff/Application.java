@@ -25,11 +25,11 @@ import org.osgi.framework.ServiceReference;
 public class Application implements IApplication {
 	
 	public enum QueryType { ALL, GROUPS, CATEGORIZED };
+	public enum DifferenceType {ALL, IGNORE_VERSION, DEEP_COMPARE};
 	
-	public static final boolean IGNORE_VERSIONS = true; // ignores differences when only the version has changed
 	public static final boolean IGNORE_CASE = true; // attempts to find IUs that have the same ID regardless of case
 	public static final boolean ONLY_LATEST = true; // Only use the latest IUs in each repository 
-	public static final boolean DEEP_COMPARE = false; // If two IUs have the same ID, it will look into the IU to see the exact differences
+	public static final DifferenceType DIFFERENCE_TYPE = DifferenceType.IGNORE_VERSION;
 	public static final QueryType QUERY_TYPE = QueryType.CATEGORIZED;
 	public static final String CATEGORY_NAME = "Programming Languages";
 	//public static final String CATEGORY_NAME = null;
@@ -45,7 +45,7 @@ public class Application implements IApplication {
 		URI uriB = new URI(locationB);
 		IProvisioningAgent agent = setupAgent(null);
 		P2Diff diff = P2Diff.createP2Diff(agent, uriA, uriB);
-		new P2DiffPrinter(diff, Application.IGNORE_CASE, Application.DEEP_COMPARE, Application.IGNORE_VERSIONS).printDiffs(System.out);
+		new P2DiffPrinter(diff, Application.IGNORE_CASE, DIFFERENCE_TYPE).printDiffs(System.out);
 		return IApplication.EXIT_OK;
 	}
 	
