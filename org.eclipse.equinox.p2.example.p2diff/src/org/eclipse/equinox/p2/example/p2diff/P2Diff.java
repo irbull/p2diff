@@ -130,14 +130,14 @@ public class P2Diff {
 	 * Returns the IUs that we want to consider from repository A
 	 */
 	public IQueryResult<IInstallableUnit> getRepositoryA() {
-		return new CollectionResult<>(repositoryAContents);
+		return new CollectionResult<IInstallableUnit>(repositoryAContents);
 	}
 	
 	/**
 	 * Returns the IUs that we want to consider from repository B
 	 */
 	public IQueryResult<IInstallableUnit> getRepositoryB() {
-		return new CollectionResult<>(repositoryBContents);
+		return new CollectionResult<IInstallableUnit>(repositoryBContents);
 	}
 
 	/**

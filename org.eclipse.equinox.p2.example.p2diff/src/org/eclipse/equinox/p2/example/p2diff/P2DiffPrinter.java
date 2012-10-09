@@ -120,7 +120,7 @@ public class P2DiffPrinter {
 	 * @return
 	 */
 	private IQueryResult<IInstallableUnit> getID(IQueryResult<IInstallableUnit> ius, String id, boolean ignoreCase) {
-		Collection<IInstallableUnit> result = new ArrayList<>();
+		Collection<IInstallableUnit> result = new ArrayList<IInstallableUnit>();
 		IQueryResult<IInstallableUnit> queryResult = ius.query(QueryUtil.createIUAnyQuery(), new NullProgressMonitor());
 		Iterator<IInstallableUnit> iterator = queryResult.iterator();
 		while(iterator.hasNext()) {
@@ -131,6 +131,6 @@ public class P2DiffPrinter {
 				result.add(next);
 			}
 		}
-		return new CollectionResult<>(result);
+		return new CollectionResult<IInstallableUnit>(result);
 	}
 }
