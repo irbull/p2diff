@@ -63,44 +63,48 @@ public class P2DiffPrinter {
 		int bCounter = 0;
 		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), Application.IGNORE_CASE);
-			if ( query.isEmpty() ) {
+			if ( query.isEmpty() || !Application.IGNORE_VERSIONS ) {
 				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
 				aCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
-				for (IInstallableUnit iu2 : set) {
-					IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
-					if ( iuDiffer.hasDifferences()) {
-						System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
-						aCounter++;
-					}
-					for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-						System.out.println("  > " + iuPart.toString());
-					}
-					for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-						System.out.println("  < " + iuPart.toString());
+				if (Application.DEEP_COMPARE) {
+					for (IInstallableUnit iu2 : set) {
+						IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
+						if (iuDiffer.hasDifferences()) {
+							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
+							aCounter++;
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
+							System.out.println("  > " + iuPart.toString());
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
+							System.out.println("  < " + iuPart.toString());
+						}
 					}
 				}
 			}
 		}
 		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), Application.IGNORE_CASE);
-			if ( query.isEmpty() ) {
+			if ( query.isEmpty() || !Application.IGNORE_VERSIONS ) {
 				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
 				bCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
-				for (IInstallableUnit iu2 : set) {
-					IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
-					if ( iuDiffer.hasDifferences()) {
-						System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
-						bCounter++;
-					}
-					for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-						System.out.println("  < " + iuPart.toString());
-					}
-					for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-						System.out.println("  > " + iuPart.toString());
+				if (Application.DEEP_COMPARE) {
+					for (IInstallableUnit iu2 : set) {
+						IUDiffer iuDiffer = new IUDiffer(iu, iu2, Application.IGNORE_VERSIONS);
+						if (iuDiffer.hasDifferences()) {
+							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
+							bCounter++;
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
+							System.out.println("  < " + iuPart.toString());
+						}
+						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
+							System.out.println("  > " + iuPart.toString());
+						}
 					}
 				}
 			}

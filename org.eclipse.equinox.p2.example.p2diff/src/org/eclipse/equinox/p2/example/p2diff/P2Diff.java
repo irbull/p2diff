@@ -11,6 +11,7 @@
 package org.eclipse.equinox.p2.example.p2diff;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.CollectionResult;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.equinox.p2.query.IQueryable;
 import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
@@ -51,15 +53,42 @@ public class P2Diff {
 		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
 		IMetadataRepository repositoryA = manager.loadRepository(repositoryALocation, new NullProgressMonitor());
 		IMetadataRepository repositoryB = manager.loadRepository(repositoryBLocation, new NullProgressMonitor());
-		return new P2Diff(repositoryA.query(createQuery(), new NullProgressMonitor()).toUnmodifiableSet(), repositoryB.query(createQuery(), new NullProgressMonitor()).toUnmodifiableSet());
+		return new P2Diff(createAndRunQuery(repositoryA).toUnmodifiableSet(), createAndRunQuery(repositoryB).toUnmodifiableSet());
 	}
 	
-	private static IQuery<IInstallableUnit> createQuery() {
-		return QueryUtil.createIUAnyQuery();
+	private static IQueryResult<IInstallableUnit> createAndRunQuery(IQueryable<IInstallableUnit> queryable) {
+		IQuery<IInstallableUnit> result = null;
+		if (Application.QUERY_TYPE == Application.QueryType.CATEGORIZED ) {
+			result = createCompoundCategoryMemberQuery(queryable.query(getCategoryQuery(Application.CATEGORY_NAME), null));
+		} else if (Application.QUERY_TYPE == Application.QueryType.GROUPS ) {
+			result = QueryUtil.createIUGroupQuery();
+		} else {
+			result = QueryUtil.createIUAnyQuery();
+		}
+		if ( Application.ONLY_LATEST ) {
+			result = QueryUtil.createLatestQuery(result);
+		}
+		
+		return queryable.query(result, null);
+	}
+	
+	private static IQuery<IInstallableUnit> createCompoundCategoryMemberQuery(IQueryResult<IInstallableUnit> categories) {
+		Collection<IQuery<? extends IInstallableUnit>> queries = new ArrayList<IQuery<? extends IInstallableUnit>>();
+		for (IInstallableUnit category : categories.toUnmodifiableSet()) {
+			queries.add(QueryUtil.createIUCategoryMemberQuery(category));
+		}
+		return QueryUtil.createCompoundQuery(queries, false);
+	}
+	
+	private static IQuery<IInstallableUnit> getCategoryQuery(String name) {
+		if ( name == null ) {
+			return QueryUtil.createIUCategoryQuery();
+		}
+		return QueryUtil.createPipeQuery(QueryUtil.createIUCategoryQuery(), QueryUtil.createMatchQuery("this.translatedProperties[$0] == $1", IInstallableUnit.PROP_NAME, name));
 	}
 
 	
-	public P2Diff(Set<IInstallableUnit> repositoryA, Set<IInstallableUnit> repositoryB) {
+	private P2Diff(Set<IInstallableUnit> repositoryA, Set<IInstallableUnit> repositoryB) {
 		this.repositoryA = repositoryA;
 		this.repositoryB = repositoryB;
 	}

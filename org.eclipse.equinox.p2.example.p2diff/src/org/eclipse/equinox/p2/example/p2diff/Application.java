@@ -24,16 +24,23 @@ import org.osgi.framework.ServiceReference;
  */
 public class Application implements IApplication {
 	
+	public enum QueryType { ALL, GROUPS, CATEGORIZED };
+	
 	public static final boolean IGNORE_VERSIONS = true; // ignores differences when only the version has changed
 	public static final boolean IGNORE_CASE = true; // attempts to find IUs that have the same ID regardless of case
-	public String locationA = "http://download.eclipse.org/technology/epp/packages/juno/SR1/";
-	public String locationB = "http://download.eclipse.org/technology/epp/packages/juno/SR1a.315/";
+	public static final boolean ONLY_LATEST = true; // Only use the latest IUs in each repository 
+	public static final boolean DEEP_COMPARE = false; // If two IUs have the same ID, it will look into the IU to see the exact differences
+	public static final QueryType QUERY_TYPE = QueryType.CATEGORIZED;
+	public static final String CATEGORY_NAME = "Programming Languages";
+	//public static final String CATEGORY_NAME = null;
+	
+	public String locationA = "http://download.eclipse.org/releases/juno";
+	public String locationB = "http://download.eclipse.org/releases/indigo";
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
 	public Object start(IApplicationContext context) throws Exception {
-		//URI uriA = new URI("http://download.eclipse.org/technology/epp/packages/juno/SR1a.313/");
 		URI uriA = new URI(locationA);
 		URI uriB = new URI(locationB);
 		IProvisioningAgent agent = setupAgent(null);
