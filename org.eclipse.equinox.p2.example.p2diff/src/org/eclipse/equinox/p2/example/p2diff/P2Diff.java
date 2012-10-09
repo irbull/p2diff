@@ -70,7 +70,6 @@ public class P2Diff {
 		if ( Application.ONLY_LATEST ) {
 			result = QueryUtil.createLatestQuery(result);
 		}
-		
 		return queryable.query(result, null);
 	}
 	
@@ -127,18 +126,30 @@ public class P2Diff {
 		return new CollectionResult<IInstallableUnit>(result);
 	}
 
+	/**
+	 * Returns the IUs that we want to consider from repository A
+	 */
 	public IQueryResult<IInstallableUnit> getRepositoryA() {
 		return new CollectionResult<>(repositoryAContents);
 	}
 	
+	/**
+	 * Returns the IUs that we want to consider from repository B
+	 */
 	public IQueryResult<IInstallableUnit> getRepositoryB() {
 		return new CollectionResult<>(repositoryBContents);
 	}
 
+	/**
+	 * Returns the location of repository A
+	 */
 	public String getRepositoryALocation() {
 		return this.repositoryA.getLocation().toString();
 	}
-	
+
+	/**
+	 * Returns the location of repository B
+	 */
 	public String getRepositoryBLocation() {
 		return this.repositoryB.getLocation().toString();
 	}
