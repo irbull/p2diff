@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: org.eclipse.equinox.p2.example.p2diff.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.equinox.p2.example.p2diff.tests.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
