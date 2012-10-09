@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Tests
 Bundle-SymbolicName: org.eclipse.equinox.p2.example.p2diff.tests
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.equinox.p2.example.p2diff.tests.Activator
+Fragment-Host: org.eclipse.equinox.p2.example.p2diff;bundle-version="1.0.0"
 Require-Bundle: org.eclipse.core.runtime
-Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
