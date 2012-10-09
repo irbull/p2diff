@@ -111,10 +111,10 @@ public class P2DiffPrinter {
 		}
 		System.out.println("=== Summary ===");
 		if ( !relativeComplementB.isEmpty() ) {
-			System.out.println("Repository A contains " + aCounter + " unique IUs");
+			System.out.println(diff.getRepositoryALocation() + " contains " + aCounter + " unique IUs");
 		}
 		if ( !relativeComplementA.isEmpty() ) {
-			System.out.println("Repository B contains " + bCounter + " unique IUs");
+			System.out.println(diff.getRepositoryBLocation() + " contains " + bCounter + " unique IUs");
 		}
 	}
 

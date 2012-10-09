@@ -37,8 +37,10 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
  */
 public class P2Diff {
 
-	private Set<IInstallableUnit> repositoryA;
-	private Set<IInstallableUnit> repositoryB;
+	private Set<IInstallableUnit> repositoryAContents;
+	private Set<IInstallableUnit> repositoryBContents;
+	private final IMetadataRepository repositoryA;
+	private final IMetadataRepository repositoryB;
 
 	/**
 	 * Factory method to create a P2Diff tool
@@ -53,7 +55,7 @@ public class P2Diff {
 		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
 		IMetadataRepository repositoryA = manager.loadRepository(repositoryALocation, new NullProgressMonitor());
 		IMetadataRepository repositoryB = manager.loadRepository(repositoryBLocation, new NullProgressMonitor());
-		return new P2Diff(createAndRunQuery(repositoryA).toUnmodifiableSet(), createAndRunQuery(repositoryB).toUnmodifiableSet());
+		return new P2Diff(repositoryA, createAndRunQuery(repositoryA).toUnmodifiableSet(), repositoryB, createAndRunQuery(repositoryB).toUnmodifiableSet());
 	}
 	
 	private static IQueryResult<IInstallableUnit> createAndRunQuery(IQueryable<IInstallableUnit> queryable) {
@@ -88,9 +90,11 @@ public class P2Diff {
 	}
 
 	
-	private P2Diff(Set<IInstallableUnit> repositoryA, Set<IInstallableUnit> repositoryB) {
+	private P2Diff(IMetadataRepository repositoryA, Set<IInstallableUnit> repositoryAContents, IMetadataRepository repositoryB, Set<IInstallableUnit> repositoryBContents) {
 		this.repositoryA = repositoryA;
+		this.repositoryAContents = repositoryAContents;
 		this.repositoryB = repositoryB;
+		this.repositoryBContents = repositoryBContents;
 	}
 	
 	/**
@@ -98,8 +102,8 @@ public class P2Diff {
 	 * @return
 	 */
 	public Collection<IInstallableUnit> getInersection() {
-		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryA);
-		result.addAll(repositoryB);
+		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryAContents);
+		result.addAll(repositoryBContents);
 		return result;
 	}
 	
@@ -108,8 +112,8 @@ public class P2Diff {
 	 * @return
 	 */
 	public IQueryResult<IInstallableUnit> getRelativeComplementA() {
-		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryB);
-		result.removeAll(repositoryA);
+		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryBContents);
+		result.removeAll(repositoryAContents);
 		return new CollectionResult<IInstallableUnit>(result);
 	}
 	
@@ -118,17 +122,24 @@ public class P2Diff {
 	 * @return
 	 */
 	public IQueryResult<IInstallableUnit> getRelativeComplementB() {
-		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryA);
-		result.removeAll(repositoryB);
+		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryAContents);
+		result.removeAll(repositoryBContents);
 		return new CollectionResult<IInstallableUnit>(result);
 	}
 
 	public IQueryResult<IInstallableUnit> getRepositoryA() {
-		return new CollectionResult<>(repositoryA);
+		return new CollectionResult<>(repositoryAContents);
 	}
 	
 	public IQueryResult<IInstallableUnit> getRepositoryB() {
-		return new CollectionResult<>(repositoryB);
+		return new CollectionResult<>(repositoryBContents);
+	}
+
+	public String getRepositoryALocation() {
+		return this.repositoryA.getLocation().toString();
 	}
 	
+	public String getRepositoryBLocation() {
+		return this.repositoryB.getLocation().toString();
+	}
 }
