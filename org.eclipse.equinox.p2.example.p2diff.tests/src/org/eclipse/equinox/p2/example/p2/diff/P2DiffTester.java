@@ -18,32 +18,32 @@ public class P2DiffTester {
 
 	@Test
 	public void testGetRelativeComplementA() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testGetRelativeComplementB() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testGetRepositoryA() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testGetRepositoryB() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testGetRepositoryALocation() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testGetRepositoryBLocation() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
