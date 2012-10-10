@@ -10,44 +10,16 @@
  *******************************************************************************/
 package org.eclipse.equinox.p2.example.p2.diff;
 
-import static org.junit.Assert.*;
-
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.MetadataFactory;
 import org.eclipse.equinox.p2.metadata.MetadataFactory.InstallableUnitDescription;
-import org.junit.Test;
 
-public class P2DiffTester extends IUTester{
+public abstract class IUTester {
+
+	protected IInstallableUnit createSimpleIU(String id) {
+		InstallableUnitDescription installableUnitDescription = new MetadataFactory.InstallableUnitDescription();
+		installableUnitDescription.setId(id);
+		return MetadataFactory.createInstallableUnit(installableUnitDescription);
+	}
 	
-	@Test
-	public void testGetRelativeComplementA() {
-		//fail("Not yet implemented");
-		
-	}
-
-	@Test
-	public void testGetRelativeComplementB() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetRepositoryA() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetRepositoryB() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetRepositoryALocation() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetRepositoryBLocation() {
-		//fail("Not yet implemented");
-	}
-
 }

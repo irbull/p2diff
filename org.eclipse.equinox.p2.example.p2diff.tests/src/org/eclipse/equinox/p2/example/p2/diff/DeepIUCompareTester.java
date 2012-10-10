@@ -18,14 +18,8 @@ import org.eclipse.equinox.p2.metadata.MetadataFactory;
 import org.eclipse.equinox.p2.metadata.MetadataFactory.InstallableUnitDescription;
 import org.junit.Test;
 
-public class DeepIUCompareTester {
+public class DeepIUCompareTester extends IUTester {
 	
-	IInstallableUnit createSimpleIU(String id) {
-		InstallableUnitDescription installableUnitDescription = new MetadataFactory.InstallableUnitDescription();
-		installableUnitDescription.setId(id);
-		return MetadataFactory.createInstallableUnit(installableUnitDescription);
-	}
-
 	@Test
 	public void testIAE() {
 		try {
