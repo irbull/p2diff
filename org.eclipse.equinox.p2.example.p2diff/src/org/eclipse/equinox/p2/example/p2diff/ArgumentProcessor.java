@@ -34,8 +34,8 @@ public class ArgumentProcessor {
 			printHelpMessage();
 			return null;
 		}
-		String locationA = args[args.length-1];
-		String locationB = args[args.length-2];
+		String locationA = args[args.length-2];
+		String locationB = args[args.length-1];
 		ArgumentProcessor argumentProcessor = new ArgumentProcessor(new URI(locationA), new URI(locationB));
 		int optionLength = args.length-2;
 		for ( int i = 0; i < optionLength; i++) {
@@ -53,9 +53,9 @@ public class ArgumentProcessor {
 				argumentProcessor.mode = DifferenceType.ALL;
 			} else if (arg.equals("-mode=ignoreversions") ) {
 				argumentProcessor.mode = DifferenceType.IGNORE_VERSION;
-			} else if (arg.equals("-mode=deepcompare")) {
+			} else if (arg.equals("-mode=deep")) {
 				argumentProcessor.mode = DifferenceType.DEEP_COMPARE;
-			} else if (arg.equals("-igorecase")) {
+			} else if (arg.equals("-ignorecase")) {
 				argumentProcessor.ignoreCase = true;
 			} else if (arg.equals("-onlylatest")) {
 				argumentProcessor.onlyLatest = true;
@@ -100,7 +100,4 @@ public class ArgumentProcessor {
 	public String getCategoryName() {
 		return null;
 	}
-
-
-	
 }
