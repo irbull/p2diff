@@ -86,6 +86,39 @@ public class ArgumentProcessorTest {
 	}
 	
 	@Test
+	public void testArgumentProcessorCategoryName1() throws Exception {
+		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("-category=Programming Languages -onlyLatest http://foo http://bar"));
+		assertNotNull(argumentProcessor);
+		assertTrue(argumentProcessor.isOnlyLatest());
+		assertFalse(argumentProcessor.isIgnoreCase());
+		assertEquals("Programming Languages", argumentProcessor.getCategoryName());
+		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
+		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
+	}
+	
+	@Test
+	public void testArgumentProcessorCategoryName2() throws Exception {
+		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("-category=Programming  -onlyLatest http://foo http://bar"));
+		assertNotNull(argumentProcessor);
+		assertTrue(argumentProcessor.isOnlyLatest());
+		assertFalse(argumentProcessor.isIgnoreCase());
+		assertEquals("Programming", argumentProcessor.getCategoryName());
+		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
+		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
+	}
+	
+	@Test
+	public void testArgumentProcessorCategoryName3() throws Exception {
+		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("-category=Programming bar foo bar -onlyLatest http://foo http://bar"));
+		assertNotNull(argumentProcessor);
+		assertTrue(argumentProcessor.isOnlyLatest());
+		assertFalse(argumentProcessor.isIgnoreCase());
+		assertEquals("Programming bar foo bar", argumentProcessor.getCategoryName());
+		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
+		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
+	}
+	
+	@Test
 	public void testArgumentProcessorMode1() throws Exception {
 		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("http://foo http://bar"));
 		assertTrue(argumentProcessor.getMode() == Mode.ALL);

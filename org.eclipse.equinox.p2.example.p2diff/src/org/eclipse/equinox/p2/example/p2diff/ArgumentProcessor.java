@@ -12,6 +12,8 @@ package org.eclipse.equinox.p2.example.p2diff;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Processes the arguments passed to the tool.
@@ -21,8 +23,9 @@ import java.net.URISyntaxException;
  */
 public class ArgumentProcessor {
 	public enum QueryType { ALL, GROUPS, CATEGORIZED };
-	public enum Mode {ALL, IGNORE_VERSION, DEEP_COMPARE};
-	
+	public enum Mode {ALL, IGNORE_VERSION, DEEP_COMPARE}
+
+	private static String categoryName;;
 	private URI locationA;
 	private URI locationB;
 	private Mode mode = Mode.ALL;
@@ -34,6 +37,7 @@ public class ArgumentProcessor {
 	 * Creates a new ArgumentProcessor class based on the arguments passed in
 	 */
 	public static ArgumentProcessor createArgumentProcessor(String[] args) throws URISyntaxException {
+		args = trimArray(args);
 		if ( args.length < 2) {
 			printHelpMessage();
 			return null;
@@ -67,11 +71,29 @@ public class ArgumentProcessor {
 				argumentProcessor.ignoreCase = true;
 			} else if (arg.equals("-onlylatest")) {
 				argumentProcessor.onlyLatest = true;
+			} else if (arg.startsWith("-category=")) {
+				StringBuilder categoryNameBuilder = new StringBuilder();
+				categoryNameBuilder.append(args[i].substring("-category=".length()));
+				while ( i+1 < optionLength && !args[i+1].startsWith("-") ) {
+					i++;
+					categoryNameBuilder.append(" " + args[i]);
+				}
+				categoryName = categoryNameBuilder.toString();
 			}
 		}
 		return argumentProcessor;
 	}
 	
+	private static String[] trimArray(String[] args) {
+		Collection<String> result = new ArrayList<String>();
+		for (String string : args) {
+			if ( !string.trim().isEmpty()) {
+				result.add(string.trim());
+			}
+		}
+		return result.toArray(new String[result.size()]);
+	}
+
 	private static void printHelpMessage() {
 		
 	}
@@ -106,6 +128,6 @@ public class ArgumentProcessor {
 	}
 
 	public String getCategoryName() {
-		return null;
+		return categoryName;
 	}
 }
