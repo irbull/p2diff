@@ -25,20 +25,52 @@ import org.eclipse.equinox.p2.metadata.IRequirement;
 import org.eclipse.equinox.p2.metadata.ITouchpointData;
 import org.eclipse.equinox.p2.metadata.ITouchpointInstruction;
 
-public class IUDiffer {
+/**
+ * Does a deep compare on two IUs.  A deep compare will return differences inside
+ * two IUs (with the same ID), where the differences are more than just 'version' differences. 
+ *
+ * For example, assume we have two IUs A and B - Where A and B have the same ID but different versions
+ * The DeepIUCompare will find the parts of these IUs that differ. However, if a part only differs by a version number,
+ * that is, for example, if all the requirements are the same but the versions are different, this will not be reported.
+ * 
+ * This tool allows you to find elements that have been added or removed from an IU.  
+ * 
+ * @author Ian Bull
+ *
+ */
+public class DeepIUCompare {
 
 	private Collection<IUPart> retativeComplementA = null;
 	private Collection<IUPart> retativeComplementB = null;
 
-	public IUDiffer(IInstallableUnit iuA, IInstallableUnit iuB) {
+	/**
+	 * Creates a new DeepIUCompare object. iuA and iuB must have the same ID.
+	 */
+	public DeepIUCompare(IInstallableUnit iuA, IInstallableUnit iuB) {
+		if ( !iuA.getId().equals(iuB.getId()) ) {
+			throw new IllegalArgumentException(iuA.getId() + " must equal " + iuB.getId());
+		}
 		retativeComplementA = computeRelativeComplement(iuA, iuB);
 		retativeComplementB = computeRelativeComplement(iuB, iuA);
 	}
 	
+	/**
+	 * Returns the parts of iuB that are not in iuA.
+	 */
 	public Collection<IUPart> getRetativeComplementA() {
 		return this.retativeComplementA;
 	}
+	
+	/**
+	 * Returns true if iuA and iuB has any differences. Returns false otherwise.
+	 */
+	public boolean hasDifferences() {
+		return this.retativeComplementA.size() > 0 && this.retativeComplementB.size() > 0;
+	}
 
+	/**
+	 * Returns the parts of iuA that are not in iuB.
+	 */
 	public Collection<IUPart> getRetativeComplementB() {
 		return this.retativeComplementB;
 	}
@@ -58,6 +90,7 @@ public class IUDiffer {
 		s.removeAll(iu2);
 		return s;
 	}
+	
 	private static Collection<IUPart> getArtifactDifferences(
 			Collection<IArtifactKey> artifacts,
 			Collection<IArtifactKey> artifacts2) {
@@ -143,9 +176,5 @@ public class IUDiffer {
 			iu2.add(IUPart.createIUPart(entry, false, entry.getKey(), entry.getValue()));
 		}
 		return getComplement(iu1, iu2);
-	}
-
-	public boolean hasDifferences() {
-		return this.retativeComplementA.size() > 0 && this.retativeComplementB.size() > 0;
 	}
 }

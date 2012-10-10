@@ -63,7 +63,7 @@ public class P2DiffPrinter {
 				Set<IInstallableUnit> set = query.toSet();
 				if (this.differenceType == DifferenceType.DEEP_COMPARE) {
 					for (IInstallableUnit iu2 : set) {
-						IUDiffer iuDiffer = new IUDiffer(iu, iu2);
+						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
 							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
 							aCounter++;
@@ -87,7 +87,7 @@ public class P2DiffPrinter {
 				Set<IInstallableUnit> set = query.toSet();
 				if (this.differenceType == DifferenceType.DEEP_COMPARE) {
 					for (IInstallableUnit iu2 : set) {
-						IUDiffer iuDiffer = new IUDiffer(iu, iu2);
+						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
 							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
 							bCounter++;
