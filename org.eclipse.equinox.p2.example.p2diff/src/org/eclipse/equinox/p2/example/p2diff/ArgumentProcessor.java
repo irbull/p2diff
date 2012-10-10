@@ -13,7 +13,12 @@ package org.eclipse.equinox.p2.example.p2diff;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-
+/**
+ * Processes the arguments passed to the tool.
+ * 
+ * @author Ian Bull
+ *
+ */
 public class ArgumentProcessor {
 	public enum QueryType { ALL, GROUPS, CATEGORIZED };
 	public enum Mode {ALL, IGNORE_VERSION, DEEP_COMPARE};
@@ -25,6 +30,9 @@ public class ArgumentProcessor {
 	private boolean ignoreCase = false;
 	private boolean onlyLatest = false;
 	
+	/**
+	 * Creates a new ArgumentProcessor class based on the arguments passed in
+	 */
 	public static ArgumentProcessor createArgumentProcessor(String[] args) throws URISyntaxException {
 		if ( args.length < 2) {
 			printHelpMessage();
