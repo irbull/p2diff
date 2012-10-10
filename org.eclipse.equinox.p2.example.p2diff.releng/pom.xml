@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>../org.eclipse.equinox.p2.example.p2diff</module>
+		<module>../org.eclipse.equinox.p2.example.p2diff.packaging</module>
 		<module>../org.eclipse.equinox.p2.example.p2diff.tests</module>
 	</modules>
 
