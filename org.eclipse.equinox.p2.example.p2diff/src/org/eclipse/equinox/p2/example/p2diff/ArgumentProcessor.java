@@ -96,6 +96,10 @@ public class ArgumentProcessor {
 		this.locationB = locationB;
 	}
 	
+	ArgumentProcessor() {
+		// For testing purposes
+	}
+
 	public URI getLocationA() {
 		return locationA;
 	}

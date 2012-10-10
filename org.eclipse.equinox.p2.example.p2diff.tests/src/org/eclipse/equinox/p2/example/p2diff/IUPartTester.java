@@ -8,7 +8,7 @@
  *  Contributors:
  *     EclipseSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.equinox.p2.example.p2.diff;
+package org.eclipse.equinox.p2.example.p2diff;
 
 import org.eclipse.equinox.p2.example.p2diff.IUPart;
 import org.junit.Test;

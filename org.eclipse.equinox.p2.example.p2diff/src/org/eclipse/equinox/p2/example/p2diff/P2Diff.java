@@ -91,7 +91,7 @@ public class P2Diff {
 	}
 
 	
-	private P2Diff(IMetadataRepository repositoryA, Set<IInstallableUnit> repositoryAContents, IMetadataRepository repositoryB, Set<IInstallableUnit> repositoryBContents, ArgumentProcessor processor) {
+	P2Diff(IMetadataRepository repositoryA, Set<IInstallableUnit> repositoryAContents, IMetadataRepository repositoryB, Set<IInstallableUnit> repositoryBContents, ArgumentProcessor processor) {
 		this.repositoryA = repositoryA;
 		this.repositoryAContents = repositoryAContents;
 		this.repositoryB = repositoryB;

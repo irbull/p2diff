@@ -8,18 +8,37 @@
  *  Contributors:
  *     EclipseSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.equinox.p2.example.p2.diff;
+package org.eclipse.equinox.p2.example.p2diff;
 
+import static org.junit.Assert.*;
+
+import org.eclipse.equinox.p2.example.p2diff.DeepIUCompare;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.MetadataFactory;
 import org.eclipse.equinox.p2.metadata.MetadataFactory.InstallableUnitDescription;
+import org.junit.Test;
 
-public abstract class IUTester {
-
-	protected IInstallableUnit createSimpleIU(String id) {
-		InstallableUnitDescription installableUnitDescription = new MetadataFactory.InstallableUnitDescription();
-		installableUnitDescription.setId(id);
-		return MetadataFactory.createInstallableUnit(installableUnitDescription);
+public class DeepIUCompareTester extends IUTester {
+	
+	@Test
+	public void testIAE() {
+		try {
+			new DeepIUCompare(createSimpleIU("foo"), createSimpleIU("bar"));
+			fail("Should have thrown an IAE.");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
 	}
+
+	@Test
+	public void testNoIAE() {
+		try {
+			new DeepIUCompare(createSimpleIU("org.foo"), createSimpleIU(new String("org.foo")));
+			// expected
+		} catch (IllegalArgumentException e) {
+			fail("Should NOT have thrown an IAE.");
+		}
+	}
+
 	
 }
