@@ -16,11 +16,11 @@ import java.net.URISyntaxException;
 
 public class ArgumentProcessor {
 	public enum QueryType { ALL, GROUPS, CATEGORIZED };
-	public enum DifferenceType {ALL, IGNORE_VERSION, DEEP_COMPARE};
+	public enum Mode {ALL, IGNORE_VERSION, DEEP_COMPARE};
 	
 	private URI locationA;
 	private URI locationB;
-	private DifferenceType mode = DifferenceType.ALL;
+	private Mode mode = Mode.ALL;
 	private QueryType queryMode = QueryType.ALL;
 	private boolean ignoreCase = false;
 	private boolean onlyLatest = false;
@@ -50,11 +50,11 @@ public class ArgumentProcessor {
 			} else if (arg.equals("-query=categorized")) {
 				argumentProcessor.queryMode = QueryType.CATEGORIZED;
 			} else if (arg.equals("-mode=all")) {
-				argumentProcessor.mode = DifferenceType.ALL;
+				argumentProcessor.mode = Mode.ALL;
 			} else if (arg.equals("-mode=ignoreversions") ) {
-				argumentProcessor.mode = DifferenceType.IGNORE_VERSION;
+				argumentProcessor.mode = Mode.IGNORE_VERSION;
 			} else if (arg.equals("-mode=deep")) {
-				argumentProcessor.mode = DifferenceType.DEEP_COMPARE;
+				argumentProcessor.mode = Mode.DEEP_COMPARE;
 			} else if (arg.equals("-ignorecase")) {
 				argumentProcessor.ignoreCase = true;
 			} else if (arg.equals("-onlylatest")) {
@@ -81,7 +81,7 @@ public class ArgumentProcessor {
 		return locationB;
 	}
 
-	public DifferenceType getMode() {
+	public Mode getMode() {
 		return mode;
 	}
 

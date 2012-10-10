@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.DifferenceType;
+import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.Mode;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.CollectionResult;
 import org.eclipse.equinox.p2.query.IQueryResult;
@@ -33,9 +33,9 @@ public class P2DiffPrinter {
 	
 	private P2Diff diff;
 	private boolean ignoreCase;
-	private DifferenceType differenceType;
+	private Mode differenceType;
 
-	public P2DiffPrinter(P2Diff diff, boolean ignoreCase, DifferenceType differenceType) {
+	public P2DiffPrinter(P2Diff diff, boolean ignoreCase, Mode differenceType) {
 		this.diff = diff;
 		this.ignoreCase = ignoreCase;
 		this.differenceType = differenceType;
@@ -56,12 +56,12 @@ public class P2DiffPrinter {
 		int bCounter = 0;
 		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), this.ignoreCase);
-			if ( query.isEmpty() || this.differenceType == DifferenceType.ALL ) {
+			if ( query.isEmpty() || this.differenceType == Mode.ALL ) {
 				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
 				aCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
-				if (this.differenceType == DifferenceType.DEEP_COMPARE) {
+				if (this.differenceType == Mode.DEEP_COMPARE) {
 					for (IInstallableUnit iu2 : set) {
 						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
@@ -80,12 +80,12 @@ public class P2DiffPrinter {
 		}
 		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), this.ignoreCase);
-			if ( query.isEmpty() || this.differenceType == DifferenceType.ALL  ) {
+			if ( query.isEmpty() || this.differenceType == Mode.ALL  ) {
 				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
 				bCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
-				if (this.differenceType == DifferenceType.DEEP_COMPARE) {
+				if (this.differenceType == Mode.DEEP_COMPARE) {
 					for (IInstallableUnit iu2 : set) {
 						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {

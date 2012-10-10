@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 import java.net.URI;
 
 import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor;
-import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.DifferenceType;
+import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.Mode;
 import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.QueryType;
 import org.junit.Test;
 
@@ -88,7 +88,7 @@ public class ArgumentProcessorTest {
 	@Test
 	public void testArgumentProcessorMode1() throws Exception {
 		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("http://foo http://bar"));
-		assertTrue(argumentProcessor.getMode() == DifferenceType.ALL);
+		assertTrue(argumentProcessor.getMode() == Mode.ALL);
 		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
 		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
 	}
@@ -96,7 +96,7 @@ public class ArgumentProcessorTest {
 	@Test
 	public void testArgumentProcessorMode2() throws Exception {
 		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("-mOdE=AlL http://foo http://bar"));
-		assertTrue(argumentProcessor.getMode() == DifferenceType.ALL);
+		assertTrue(argumentProcessor.getMode() == Mode.ALL);
 		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
 		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
 	}
@@ -104,7 +104,7 @@ public class ArgumentProcessorTest {
 	@Test
 	public void testArgumentProcessorMode3() throws Exception {
 		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("-mOdE=ignoreVersions http://foo http://bar"));
-		assertTrue(argumentProcessor.getMode() == DifferenceType.IGNORE_VERSION);
+		assertTrue(argumentProcessor.getMode() == Mode.IGNORE_VERSION);
 		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
 		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
 	}
@@ -112,7 +112,7 @@ public class ArgumentProcessorTest {
 	@Test
 	public void testArgumentProcessorMode4() throws Exception {
 		ArgumentProcessor argumentProcessor = ArgumentProcessor.createArgumentProcessor(createArgs("-mOdE=deep http://foo http://bar"));
-		assertTrue(argumentProcessor.getMode() == DifferenceType.DEEP_COMPARE);
+		assertTrue(argumentProcessor.getMode() == Mode.DEEP_COMPARE);
 		assertEquals(new URI("http://foo"), argumentProcessor.getLocationA());
 		assertEquals(new URI("http://bar"), argumentProcessor.getLocationB());
 	}
