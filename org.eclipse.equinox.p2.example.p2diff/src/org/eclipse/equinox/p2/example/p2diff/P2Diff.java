@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.core.ProvisionException;
+import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.QueryType;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.CollectionResult;
 import org.eclipse.equinox.p2.query.IQuery;
@@ -41,6 +42,7 @@ public class P2Diff {
 	private Set<IInstallableUnit> repositoryBContents;
 	private final IMetadataRepository repositoryA;
 	private final IMetadataRepository repositoryB;
+	private ArgumentProcessor processor;
 
 	/**
 	 * Factory method to create a P2Diff tool
@@ -51,23 +53,23 @@ public class P2Diff {
 	 * @throws ProvisionException Thrown if a repository cannot be read
 	 * @throws OperationCanceledException
 	 */
-	public static P2Diff createP2Diff(IProvisioningAgent agent, URI repositoryALocation, URI repositoryBLocation) throws ProvisionException, OperationCanceledException {
+	public static P2Diff createP2Diff(IProvisioningAgent agent, ArgumentProcessor processor) throws ProvisionException, OperationCanceledException {
 		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) agent.getService(IMetadataRepositoryManager.SERVICE_NAME);
-		IMetadataRepository repositoryA = manager.loadRepository(repositoryALocation, new NullProgressMonitor());
-		IMetadataRepository repositoryB = manager.loadRepository(repositoryBLocation, new NullProgressMonitor());
-		return new P2Diff(repositoryA, createAndRunQuery(repositoryA).toUnmodifiableSet(), repositoryB, createAndRunQuery(repositoryB).toUnmodifiableSet());
+		IMetadataRepository repositoryA = manager.loadRepository(processor.getLocationA(), new NullProgressMonitor());
+		IMetadataRepository repositoryB = manager.loadRepository(processor.getLocationB(), new NullProgressMonitor());
+		return new P2Diff(repositoryA, createAndRunQuery(processor, repositoryA).toUnmodifiableSet(), repositoryB, createAndRunQuery(processor, repositoryB).toUnmodifiableSet(), processor);
 	}
 	
-	private static IQueryResult<IInstallableUnit> createAndRunQuery(IQueryable<IInstallableUnit> queryable) {
+	private static IQueryResult<IInstallableUnit> createAndRunQuery(ArgumentProcessor processor, IQueryable<IInstallableUnit> queryable) {
 		IQuery<IInstallableUnit> result = null;
-		if (Application.QUERY_TYPE == Application.QueryType.CATEGORIZED ) {
-			result = createCompoundCategoryMemberQuery(queryable.query(getCategoryQuery(Application.CATEGORY_NAME), null));
-		} else if (Application.QUERY_TYPE == Application.QueryType.GROUPS ) {
+		if (processor.getQueryMode() == QueryType.CATEGORIZED ) {
+			result = createCompoundCategoryMemberQuery(queryable.query(getCategoryQuery(processor.getCategoryName()), null));
+		} else if (processor.getQueryMode() == QueryType.GROUPS ) {
 			result = QueryUtil.createIUGroupQuery();
 		} else {
 			result = QueryUtil.createIUAnyQuery();
 		}
-		if ( Application.ONLY_LATEST ) {
+		if ( processor.isOnlyLatest() ) {
 			result = QueryUtil.createLatestQuery(result);
 		}
 		return queryable.query(result, null);
@@ -89,11 +91,12 @@ public class P2Diff {
 	}
 
 	
-	private P2Diff(IMetadataRepository repositoryA, Set<IInstallableUnit> repositoryAContents, IMetadataRepository repositoryB, Set<IInstallableUnit> repositoryBContents) {
+	private P2Diff(IMetadataRepository repositoryA, Set<IInstallableUnit> repositoryAContents, IMetadataRepository repositoryB, Set<IInstallableUnit> repositoryBContents, ArgumentProcessor processor) {
 		this.repositoryA = repositoryA;
 		this.repositoryAContents = repositoryAContents;
 		this.repositoryB = repositoryB;
 		this.repositoryBContents = repositoryBContents;
+		this.processor = processor;
 	}
 	
 	/**
@@ -153,4 +156,6 @@ public class P2Diff {
 	public String getRepositoryBLocation() {
 		return this.repositoryB.getLocation().toString();
 	}
+
+
 }

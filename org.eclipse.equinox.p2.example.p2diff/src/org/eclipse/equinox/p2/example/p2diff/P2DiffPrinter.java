@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.equinox.p2.example.p2diff.Application.DifferenceType;
+import org.eclipse.equinox.p2.example.p2diff.ArgumentProcessor.DifferenceType;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.CollectionResult;
 import org.eclipse.equinox.p2.query.IQueryResult;

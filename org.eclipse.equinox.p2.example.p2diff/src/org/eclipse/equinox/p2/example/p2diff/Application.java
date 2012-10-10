@@ -11,6 +11,9 @@
 package org.eclipse.equinox.p2.example.p2diff;
 
 import java.net.URI;
+import java.util.Set;
+
+import javax.swing.text.StyledEditorKit.ItalicAction;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -23,29 +26,20 @@ import org.osgi.framework.ServiceReference;
  * This class controls all aspects of the application's execution
  */
 public class Application implements IApplication {
-	
-	public enum QueryType { ALL, GROUPS, CATEGORIZED };
-	public enum DifferenceType {ALL, IGNORE_VERSION, DEEP_COMPARE};
-	
-	public static final boolean IGNORE_CASE = true; // attempts to find IUs that have the same ID regardless of case
-	public static final boolean ONLY_LATEST = true; // Only use the latest IUs in each repository 
-	public static final DifferenceType DIFFERENCE_TYPE = DifferenceType.IGNORE_VERSION;
-	public static final QueryType QUERY_TYPE = QueryType.CATEGORIZED;
-	public static final String CATEGORY_NAME = "Programming Languages";
-	//public static final String CATEGORY_NAME = null;
-	
-	public String locationA = "http://download.eclipse.org/releases/juno";
-	public String locationB = "http://download.eclipse.org/releases/indigo";
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
 	public Object start(IApplicationContext context) throws Exception {
-		URI uriA = new URI(locationA);
-		URI uriB = new URI(locationB);
+		String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
+		ArgumentProcessor processor = ArgumentProcessor.createArgumentProcessor(args);
+		if  (processor == null) {
+			return IApplication.EXIT_OK;
+		}
 		IProvisioningAgent agent = setupAgent(null);
-		P2Diff diff = P2Diff.createP2Diff(agent, uriA, uriB);
-		new P2DiffPrinter(diff, Application.IGNORE_CASE, DIFFERENCE_TYPE).printDiffs(System.out);
+		P2Diff diff = P2Diff.createP2Diff(agent, processor);
+		new P2DiffPrinter(diff, processor.isIgnoreCase(), processor.getMode()).printDiffs(System.out);
 		return IApplication.EXIT_OK;
 	}
 	
