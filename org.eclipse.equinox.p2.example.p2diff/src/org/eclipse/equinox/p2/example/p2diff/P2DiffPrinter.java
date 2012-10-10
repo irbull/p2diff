@@ -57,7 +57,7 @@ public class P2DiffPrinter {
 		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), this.ignoreCase);
 			if ( query.isEmpty() || this.differenceType == Mode.ALL ) {
-				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
+				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
 				aCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
@@ -65,14 +65,14 @@ public class P2DiffPrinter {
 					for (IInstallableUnit iu2 : set) {
 						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
-							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
+							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
 							aCounter++;
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-							System.out.println("  > " + iuPart.toString());
+							System.out.println("  < " + iuPart.toString());
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-							System.out.println("  < " + iuPart.toString());
+							System.out.println("  > " + iuPart.toString());
 						}
 					}
 				}
@@ -81,7 +81,7 @@ public class P2DiffPrinter {
 		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), this.ignoreCase);
 			if ( query.isEmpty() || this.differenceType == Mode.ALL  ) {
-				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
+				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
 				bCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
@@ -89,14 +89,14 @@ public class P2DiffPrinter {
 					for (IInstallableUnit iu2 : set) {
 						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
-							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
+							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
 							bCounter++;
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-							System.out.println("  < " + iuPart.toString());
+							System.out.println("  > " + iuPart.toString());
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-							System.out.println("  > " + iuPart.toString());
+							System.out.println("  < " + iuPart.toString());
 						}
 					}
 				}
