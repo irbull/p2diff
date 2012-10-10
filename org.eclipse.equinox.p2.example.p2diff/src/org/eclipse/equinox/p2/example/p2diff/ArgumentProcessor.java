@@ -39,11 +39,9 @@ public class ArgumentProcessor {
 	public static ArgumentProcessor createArgumentProcessor(String[] args) throws URISyntaxException {
 		args = trimArray(args);
 		if ( args.length < 2) {
-			printHelpMessage();
 			return null;
 		}
 		if ( args[args.length-1].startsWith("-") || args[args.length-2].startsWith("-")) {
-			printHelpMessage();
 			return null;
 		}
 		String locationA = args[args.length-2];
@@ -53,7 +51,6 @@ public class ArgumentProcessor {
 		for ( int i = 0; i < optionLength; i++) {
 			String arg = args[i].toLowerCase();
 			if ( arg.equals("-h")) {
-				printHelpMessage();
 				return null;
 			} else if (arg.equals("-query=all")) {
 				argumentProcessor.queryMode = QueryType.ALL;
@@ -92,10 +89,6 @@ public class ArgumentProcessor {
 			}
 		}
 		return result.toArray(new String[result.size()]);
-	}
-
-	private static void printHelpMessage() {
-		
 	}
 
 	private ArgumentProcessor(URI locationA, URI locationB) {

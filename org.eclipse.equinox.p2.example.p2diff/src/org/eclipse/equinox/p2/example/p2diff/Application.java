@@ -35,6 +35,7 @@ public class Application implements IApplication {
 		String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 		ArgumentProcessor processor = ArgumentProcessor.createArgumentProcessor(args);
 		if  (processor == null) {
+			printHelpMessage();
 			return IApplication.EXIT_OK;
 		}
 		IProvisioningAgent agent = setupAgent(null);
@@ -43,7 +44,45 @@ public class Application implements IApplication {
 		return IApplication.EXIT_OK;
 	}
 	
-	  private IProvisioningAgent setupAgent(final URI location) throws ProvisionException {
+	private void printHelpMessage() {
+		System.out.println("NAME");
+		System.out.println("   p2diff -- Shows the differences between two p2 repositories");
+		System.out.println("");
+		System.out.println("USAGE");
+		System.out.println("   p2diff [options] repository1 repository2");
+		System.out.println("");
+		System.out.println("DESCRIPTION");
+		System.out.println("   Loads two p2 repositories and pretty prints the differences.  The");
+		System.out.println("   tool can be configured for high level differences, or it can show");
+		System.out.println("   more detailed information about how specific IUs have changed.");
+		System.out.println("");
+		System.out.println("   The following options are available:");
+		System.out.println("   -h                   Displays this message");
+		System.out.println("   -onlylatest          Only operate on the latest version of each IU");
+		System.out.println("   -ignorecase          When comparing IUs, the IDs are compared in a case insenstive way");
+		System.out.println("   -mode=all            Compare all IUs regardless of their ID");
+		System.out.println("   -mode=ignoreVersions If an IU in each repository has the same ID, consider\n" +
+				           "                        them equal, regardless of their version.");
+		System.out.println("   -mode=deep           If an IU in each repository has the same ID, compare\n" + 
+				           "                        the contents of the IU.");
+		System.out.println("   -query=all           Operate on ALL the IUs in a repository");
+		System.out.println("   -query=groups        Only operate on IUs that are marked as GROUPS");
+		System.out.println("   -query=categorized   Only operate on IUs that have been explicitly categorized");
+		System.out.println("   -category=<Category> Used in conjunction with -query=categorized. This will\n" +
+				           "                        only print IUs in a specific category");
+		System.out.println();
+		System.out.println("EXAMPLE USAGE");
+		System.out.println(" Print the differences between the Juno and Indigo releases, but only show the items \n" +
+		                   " in the Programming Languages category.");           
+		System.out.println("");
+		System.out.println(" ./p2diff -query=categorized -mode=ignoreVersions -category=Programming Languages -onlylatest http://download.eclipse.org/releases/juno http://download.eclipse.org/releases/indigo");
+		System.out.println("");
+		System.out.println("LICENSE");
+		System.out.println("    p2Diff is licensed under the EPL. Copyright EclipseSource 2012.");
+		System.out.println("    Maintained by Ian Bull.");
+	}
+
+	private IProvisioningAgent setupAgent(final URI location) throws ProvisionException {
 		    IProvisioningAgent result = null;
 		    ServiceReference providerRef =  Activator.getContext().getServiceReference(IProvisioningAgentProvider.SERVICE_NAME);
 		    if (providerRef == null) {
