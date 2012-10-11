@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
-	<parent>
-		<relativePath>../org.eclipse.equinox.p2.example.p2diff.releng/parent.pom.xml
-		</relativePath>
-		<groupId>org.eclipse.equinox.p2.example</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<modules>
-		<module>../org.eclipse.equinox.p2.example.p2diff</module>
-		<module>../org.eclipse.equinox.p2.example.p2diff.packaging</module>
-		<module>../org.eclipse.equinox.p2.example.p2diff.tests</module>
-	</modules>
+  <parent>
+    <groupId>org.eclipse.equinox.p2.example</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../org.eclipse.equinox.p2.example.p2diff.releng/parent</relativePath>
+  </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.eclipse.equinox.p2.example</groupId>
-	<artifactId>or.geclipse.equinox.p2.example.p2diff.releng</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Releng Project</name>
+  <modules>
+    <module>../org.eclipse.equinox.p2.example.p2diff</module>
+    <module>../org.eclipse.equinox.p2.example.p2diff.packaging</module>
+    <module>../org.eclipse.equinox.p2.example.p2diff.tests</module>
+  </modules>
+
+  <name>Releng Project</name>
+  <artifactId>or.geclipse.equinox.p2.example.p2diff.releng</artifactId>
+  <packaging>pom</packaging>
+  
 </project> 
