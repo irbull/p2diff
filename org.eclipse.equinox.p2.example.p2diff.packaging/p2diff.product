@@ -25,8 +25,8 @@
       <plugin id="org.eclipse.core.net"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.ecf.provider.filetransfer"/>
-      <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient"/>
-      <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl" fragment="true"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient4"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient4.ssl" fragment="true"/>
       <plugin id="org.eclipse.ecf.provider.filetransfer.ssl" fragment="true"/>
       <plugin id="org.eclipse.equinox.ds"/>
       <plugin id="org.eclipse.equinox.p2.core"/>

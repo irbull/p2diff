@@ -10,14 +10,14 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho-version>0.15.0</tycho-version>
+    <tycho-version>0.20.0</tycho-version>
   </properties>
 
   <repositories>
     <repository>
-      <id>platformRepo-38</id>
+      <id>luna-M6</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/eclipse/updates/3.8</url>
+      <url>http://download.jboss.org/jbosstools/updates/requirements/luna/201403140900-M6/</url>
     </repository>
   </repositories>
 
