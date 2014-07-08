@@ -103,7 +103,7 @@ public class P2Diff {
 	 * Returns the intersection of A and B
 	 * @return
 	 */
-	public Collection<IInstallableUnit> getInersection() {
+	public Collection<IInstallableUnit> getIntersection() {
 		HashSet<IInstallableUnit> result = new HashSet<IInstallableUnit>(repositoryAContents);
 		result.addAll(repositoryBContents);
 		return result;
