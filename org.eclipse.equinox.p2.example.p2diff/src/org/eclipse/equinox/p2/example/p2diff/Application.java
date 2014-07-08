@@ -82,7 +82,7 @@ public class Application implements IApplication {
 		System.out.println("    Maintained by Ian Bull.");
 	}
 
-	private IProvisioningAgent setupAgent(final URI location) throws ProvisionException {
+	IProvisioningAgent setupAgent(final URI location) throws ProvisionException {
 		    IProvisioningAgent result = null;
 		    ServiceReference providerRef =  Activator.getContext().getServiceReference(IProvisioningAgentProvider.SERVICE_NAME);
 		    if (providerRef == null) {
