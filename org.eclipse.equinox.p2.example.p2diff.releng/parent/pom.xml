@@ -15,9 +15,9 @@
 
   <repositories>
     <repository>
-      <id>luna-M6</id>
+      <id>luna-R</id>
       <layout>p2</layout>
-      <url>http://download.jboss.org/jbosstools/updates/requirements/luna/201403140900-M6/</url>
+      <url>http://download.eclipse.org/releases/luna/201406250900</url>
     </repository>
   </repositories>
   <build>
