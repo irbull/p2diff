@@ -12,7 +12,7 @@
    </launcherArgs>
 
    <launcher name="p2diff">
-      <solaris/>
+      <linux/>
       <win useIco="false">
          <bmp/>
       </win>
@@ -28,6 +28,7 @@
       <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient4"/>
       <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient4.ssl" fragment="true"/>
       <plugin id="org.eclipse.ecf.provider.filetransfer.ssl" fragment="true"/>
+      <plugin id="org.eclipse.ecf.ssl"/>
       <plugin id="org.eclipse.equinox.ds"/>
       <plugin id="org.eclipse.equinox.p2.core"/>
       <plugin id="org.eclipse.equinox.p2.example.p2diff"/>
