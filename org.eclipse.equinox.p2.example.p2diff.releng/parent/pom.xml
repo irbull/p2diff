@@ -10,14 +10,14 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho-version>0.20.0</tycho-version>
+    <tycho-version>0.24.0</tycho-version>
   </properties>
 
   <repositories>
     <repository>
       <id>luna-R</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/luna/201406250900</url>
+      <url>http://download.eclipse.org/releases/mars/</url>
     </repository>
   </repositories>
   <build>
@@ -49,11 +49,6 @@
               <os>linux</os>
               <ws>gtk</ws>
               <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
-              <arch>x86</arch>
             </environment>
             <environment>
               <os>win32</os>
