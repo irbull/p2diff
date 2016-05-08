@@ -14,6 +14,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Processes the arguments passed to the tool.
@@ -32,6 +34,7 @@ public class ArgumentProcessor {
 	private QueryType queryMode = QueryType.ALL;
 	private boolean ignoreCase = false;
 	private boolean onlyLatest = false;
+	private Set<String> outputFiles;
 	
 	/**
 	 * Creates a new ArgumentProcessor class based on the arguments passed in
@@ -76,6 +79,10 @@ public class ArgumentProcessor {
 					categoryNameBuilder.append(" " + args[i]);
 				}
 				categoryName = categoryNameBuilder.toString();
+			} else if (arg.startsWith("-outputfile=")) {
+				argumentProcessor.getOutputFiles().add(arg.substring("-outputfile=".length()));
+			} else {
+				System.err.println("Unsupported parameter: " + arg);
 			}
 		}
 		return argumentProcessor;
@@ -126,5 +133,12 @@ public class ArgumentProcessor {
 
 	public String getCategoryName() {
 		return categoryName;
+	}
+
+	public Set<String> getOutputFiles() {
+		if (this.outputFiles == null) {
+			this.outputFiles = new HashSet<String>();
+		}
+		return this.outputFiles;
 	}
 }

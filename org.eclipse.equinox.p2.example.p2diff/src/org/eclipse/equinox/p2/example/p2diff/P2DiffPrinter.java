@@ -10,7 +10,7 @@
  *******************************************************************************/	
 package org.eclipse.equinox.p2.example.p2diff;
 
-import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ public class P2DiffPrinter {
 	 * 
 	 * @param out The output stream to write the diff results too
 	 */
-	public void printDiffs(OutputStream out) {
+	public void printDiffs(Set<PrintStream> outs) {
 		IQueryResult<IInstallableUnit> relativeComplementB = diff.getRelativeComplementB();
 		IQueryResult<IInstallableUnit> relativeComplementA = diff.getRelativeComplementA();
 		IQueryResult<IInstallableUnit> repositoryA = diff.getRepositoryA();
@@ -57,7 +57,7 @@ public class P2DiffPrinter {
 		for (IInstallableUnit iu : relativeComplementB.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryB, iu.getId(), this.ignoreCase);
 			if ( query.isEmpty() || this.differenceType == Mode.ALL ) {
-				System.out.println("< " + iu.getId() + " [" + iu.getVersion() +"] ");
+				println(outs, "< " + iu.getId() + " [" + iu.getVersion() +"] ");
 				aCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
@@ -65,14 +65,14 @@ public class P2DiffPrinter {
 					for (IInstallableUnit iu2 : set) {
 						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
-							System.out.println("< " + iu.getId() + " [" + iu.getVersion() + "] ");
+							println(outs, "< " + iu.getId() + " [" + iu.getVersion() + "] ");
 							aCounter++;
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-							System.out.println("  < " + iuPart.toString());
+							println(outs, "  < " + iuPart.toString());
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-							System.out.println("  > " + iuPart.toString());
+							println(outs, "  > " + iuPart.toString());
 						}
 					}
 				}
@@ -81,7 +81,7 @@ public class P2DiffPrinter {
 		for (IInstallableUnit iu : relativeComplementA.toUnmodifiableSet()) {
 			IQueryResult<IInstallableUnit> query = getID(repositoryA, iu.getId(), this.ignoreCase);
 			if ( query.isEmpty() || this.differenceType == Mode.ALL  ) {
-				System.out.println("> " + iu.getId() + " [" + iu.getVersion() +"] ");
+				println(outs, "> " + iu.getId() + " [" + iu.getVersion() +"] ");
 				bCounter++;
 			} else {
 				Set<IInstallableUnit> set = query.toSet();
@@ -89,28 +89,34 @@ public class P2DiffPrinter {
 					for (IInstallableUnit iu2 : set) {
 						DeepIUCompare iuDiffer = new DeepIUCompare(iu, iu2);
 						if (iuDiffer.hasDifferences()) {
-							System.out.println("> " + iu.getId() + " [" + iu.getVersion() + "] ");
+							println(outs, "> " + iu.getId() + " [" + iu.getVersion() + "] ");
 							bCounter++;
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementA()) {
-							System.out.println("  > " + iuPart.toString());
+							println(outs, "  > " + iuPart.toString());
 						}
 						for (IUPart iuPart : iuDiffer.getRetativeComplementB()) {
-							System.out.println("  < " + iuPart.toString());
+							println(outs, "  < " + iuPart.toString());
 						}
 					}
 				}
 			}
 		}
-		System.out.println("=== Summary ===");
+		println(outs, "=== Summary ===");
 		if ( !relativeComplementB.isEmpty() ) {
-			System.out.println(diff.getRepositoryALocation() + " contains " + aCounter + " unique IUs");
+			println(outs, diff.getRepositoryALocation() + " contains " + aCounter + " unique IUs");
 		}
 		if ( !relativeComplementA.isEmpty() ) {
-			System.out.println(diff.getRepositoryBLocation() + " contains " + bCounter + " unique IUs");
+			println(outs, diff.getRepositoryBLocation() + " contains " + bCounter + " unique IUs");
 		}
 	}
 	
+	private void println(Set<PrintStream> outs, String string) {
+		for (PrintStream out : outs) {
+			out.println(string);
+		}
+	}
+
 	/**
 	 * Returns all the IUs in the collections that match a particular ID
 	 * @param ius The IUs to query
