@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.equinox.p2.example.p2diff;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
-
-import javax.swing.text.StyledEditorKit.ItalicAction;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -40,7 +42,24 @@ public class Application implements IApplication {
 		}
 		IProvisioningAgent agent = setupAgent(null);
 		P2Diff diff = P2Diff.createP2Diff(agent, processor);
-		new P2DiffPrinter(diff, processor.isIgnoreCase(), processor.getMode()).printDiffs(System.out);
+		Set<PrintStream> outs = new HashSet<PrintStream>();
+		outs.add(System.out);
+		for (String location : processor.getOutputFiles()) {
+			File file = new File(location);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			System.err.println("file=" +location);
+			FileOutputStream outStream = new FileOutputStream(file);
+			PrintStream printStream = new PrintStream(outStream);
+			outs.add(printStream);
+		}
+		new P2DiffPrinter(diff, processor.isIgnoreCase(), processor.getMode()).printDiffs(outs);
+		for (PrintStream stream : outs) {
+			if (stream != System.out) {
+				stream.close();
+			}
+		}
 		return IApplication.EXIT_OK;
 	}
 	
@@ -70,6 +89,8 @@ public class Application implements IApplication {
 		System.out.println("   -query=categorized   Only operate on IUs that have been explicitly categorized");
 		System.out.println("   -category=<Category> Used in conjunction with -query=categorized. This will\n" +
 				           "                        only print IUs in a specific category");
+		System.out.println("   -outputfile=<location>   File location where to write a copy of the report (multiple\n" +
+				           "                            settings of this parameter will copy to multiple files).");
 		System.out.println();
 		System.out.println("EXAMPLE USAGE");
 		System.out.println(" Print the differences between the Juno and Indigo releases, but only show the items \n" +
