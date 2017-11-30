@@ -6,18 +6,18 @@
   <name>Parent POM</name>
   <artifactId>parent</artifactId>
   <groupId>org.eclipse.equinox.p2.example</groupId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <tycho-version>0.20.0</tycho-version>
+    <tycho-version>1.0.0</tycho-version>
   </properties>
 
   <repositories>
     <repository>
-      <id>luna-R</id>
+      <id>oxygen</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/luna/201406250900</url>
+      <url>http://download.eclipse.org/releases/oxygen</url>
     </repository>
   </repositories>
   <build>
@@ -49,11 +49,6 @@
               <os>linux</os>
               <ws>gtk</ws>
               <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
-              <arch>x86</arch>
             </environment>
             <environment>
               <os>win32</os>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: P2diff
 Bundle-SymbolicName: org.eclipse.equinox.p2.example.p2diff; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.equinox.p2.example.p2diff.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.p2.metadata;bundle-version="2.0.0",
